@@ -2,26 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Eco Explorers — SCORM Launch</title>
-  <!-- For SCORM packaging we keep a copy of styles under scorm/css/styles.css -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <noscript>This game needs JavaScript enabled.</noscript>
+
   <header class="topbar" role="banner">
     <div class="brand">
       <span aria-hidden="true">🤖🌿</span>
       <strong>Eco Explorers (SCORM)</strong>
     </div>
+
+    <nav aria-label="Progress">
+      <ol id="progress" class="progress" data-total="6" data-current="1">
+        <!-- dots inserted by JS -->
+      </ol>
+    </nav>
+
+    <div class="controls">
+      <button id="btn-mute" aria-pressed="false" aria-label="Toggle sound">🔈</button>
+      <button id="btn-reset" aria-label="Reset progress">↺</button>
+      <a class="sr-only-focusable" href="#stage">Skip to game</a>
+    </div>
   </header>
 
   <main id="stage" role="main" tabindex="-1" aria-live="polite"></main>
-  <footer class="bottombar" role="contentinfo"></footer>
+
+  <footer class="bottombar" role="contentinfo">
+    <button id="btn-back" class="nav-btn" disabled>Back</button>
+    <div class="spacer"></div>
+    <button id="btn-hint" class="nav-btn" aria-describedby="hint-desc">Hint</button>
+    <span id="hint-desc" class="sr-only">Use a limited hint if you get stuck.</span>
+    <div class="spacer"></div>
+    <button id="btn-next" class="nav-btn">Next</button>
+  </footer>
 
   <script>
     window.APP_VERSION = "0.1.0";
 
-    // Optional: xAPI configuration if your LMS provides an LRS
+    // Optional xAPI config if your LMS provides an LRS
     // window.XAPI_ENDPOINT = "https://your-lrs.example/xapi/";
     // window.XAPI_AUTH = "Basic base64(username:password)";
     // window.XAPI_ACTOR = { mbox: "mailto:player@example.com", name: "Player" };
