@@ -90,3 +90,12 @@ p{ margin: 0 0 12px; color:var(--muted); }
 }
 .sr-only-focusable:focus{ position:static; width:auto; height:auto; margin:0; overflow:visible; clip:auto; }
 :focus-visible{ outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Center the content column and constrain width */
+.stage-wrap { width: min(960px, 96vw); margin-inline: auto; }
+
+/* Ensure cards inside grids fit their columns (don’t take full 960px) */
+.grid .game-card { width: 100%; }
+
+/* Nudge the stage to center available space */
+#stage { place-content: center; }

@@ -13,12 +13,11 @@
   }
 
   function pointerDraggable(el){
-    let dragging = false, offsetX=0, offsetY=0, startPos=null, ghost=null;
+    let dragging = false, offsetX=0, offsetY=0, ghost=null;
 
     function onStart(e){
       dragging = true;
       const rect = el.getBoundingClientRect();
-      startPos = {x: rect.left + window.scrollX, y: rect.top + window.scrollY};
       offsetX = (e.clientX || e.touches?.[0]?.clientX) - rect.left;
       offsetY = (e.clientY || e.touches?.[0]?.clientY) - rect.top;
 
@@ -52,12 +51,12 @@
       ghost?.remove();
       ghost = null;
 
-      const drop = document.elementFromPoint(e.clientX || e.changedTouches?.[0]?.clientX, e.clientY || e.changedTouches?.[0]?.clientY);
+      const ptX = e.clientX || e.changedTouches?.[0]?.clientX;
+      const ptY = e.clientY || e.changedTouches?.[0]?.clientY;
+      const drop = document.elementFromPoint(ptX, ptY);
       const bucket = drop?.closest?.('.bucket');
       if(bucket){
         el.dispatchEvent(new CustomEvent('leaf:drop', {bubbles:true, detail:{bucket}}));
-      }else{
-        // bounce back
       }
       document.removeEventListener('pointermove', move);
       document.removeEventListener('pointerup', end);
@@ -70,15 +69,18 @@
   }
 
   function Level1(){
-    const root = UI.el('section', {className:'game-card'});
-    root.append(
+    // Centering wrapper controls the overall width
+    const root = UI.el('div', {className:'stage-wrap'});
+
+    // Header card
+    const header = UI.el('section', {className:'game-card'});
+    header.append(
       UI.el('h1', {textContent:'Level 1: Sort the Leaves'}),
       UI.el('p', {textContent:'Drag the leaves into the matching baskets. Use keyboard: focus a leaf and press 1, 2, or 3.'})
     );
 
     const buckets = ['red','yellow','green'].map(c=>{
       const b = UI.el('div', {className:'bucket', dataset:{color:c}});
-      b.dataset.color = c;
       b.setAttribute('aria-label', c + ' basket');
       return b;
     });
@@ -93,11 +95,11 @@
         const chosen = e.detail.bucket.dataset.color;
         const isCorrect = chosen === l.dataset.color;
         App.tracking.recordAnswer(1, 'leaf-'+l.dataset.id, isCorrect ? 1 : 0, {response: chosen, correct: l.dataset.color});
-        l.remove(); // remove leaf once placed
-        const done = root.querySelectorAll('.leaf').length === 0;
+        l.remove();
+        const done = header.querySelectorAll('.leaf').length === 0;
         if(done) finish();
       });
-      // keyboard shortcut: 1/2/3 to drop into buckets
+      // keyboard shortcut: 1/2/3 = buckets
       l.addEventListener('keydown', (e)=>{
         if(['1','2','3'].includes(e.key)){
           const idx = Number(e.key)-1;
@@ -106,13 +108,14 @@
           const isCorrect = chosen === l.dataset.color;
           App.tracking.recordAnswer(1, 'leaf-'+l.dataset.id, isCorrect ? 1 : 0, {response: chosen, correct: l.dataset.color});
           l.remove();
-          const done = root.querySelectorAll('.leaf').length === 0;
+          const done = header.querySelectorAll('.leaf').length === 0;
           if(done) finish();
         }
       });
     });
 
     leafRow.append(...leaves);
+    header.append(leafRow);
 
     const grid = UI.el('div', {className:'grid cols-3'});
     buckets.forEach((b, i)=>{
@@ -122,7 +125,7 @@
       grid.append(box);
     });
 
-    root.append(leafRow, UI.el('div', {style:'height:8px'}), grid);
+    root.append(header, UI.el('div', {style:'height:12px'}), grid);
 
     function finish(){
       const stats = App.tracking.levelStats(1);
@@ -133,7 +136,7 @@
         UI.el('h2', {textContent:'Nice work!'}),
         UI.el('p', {textContent:`Level 1 complete. Score: ${score}.`})
       );
-      UI.render(document.getElementById('stage'), doneView);
+      UI.render(document.getElementById('stage'), UI.el('div',{className:'stage-wrap'}, doneView));
       App.nav.next();
     }
 
