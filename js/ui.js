@@ -11,14 +11,37 @@
       }
     },
     update(current){
-      const dots = $$('#progress li');
+      const dots = Array.from(document.querySelectorAll('#progress li'));
       dots.forEach((dot, i) => {
         dot.classList.toggle('current', i+1===current);
         dot.classList.toggle('done', i+1<current);
       });
-      $('#progress').dataset.current = String(current);
+      document.getElementById('progress').dataset.current = String(current);
     }
   };
+
+  function applyProps(el, props){
+    if(!props) return;
+    for (const [k, v] of Object.entries(props)){
+      if (v == null) continue;
+
+      if (k === 'dataset' && typeof v === 'object'){
+        for (const [dk, dv] of Object.entries(v)){
+          el.dataset[dk] = dv;
+        }
+      } else if (k === 'style'){
+        if (typeof v === 'string') el.setAttribute('style', v);
+        else if (typeof v === 'object') Object.assign(el.style, v);
+      } else if (k === 'class'){
+        el.className = v;
+      } else if (k in el && k !== 'dataset' && k !== 'style'){
+        try { el[k] = v; }
+        catch { el.setAttribute(k, v); }
+      } else {
+        el.setAttribute(k, v);
+      }
+    }
+  }
 
   const UI = {
     Progress,
@@ -27,8 +50,9 @@
       container.focus({preventScroll:true});
     },
     el(tag, props={}, ...kids){
-      const n = Object.assign(document.createElement(tag), props);
-      for(const k of kids) n.append(k);
+      const n = document.createElement(tag);
+      applyProps(n, props);
+      for (const kid of kids){ if(kid!=null) n.append(kid); }
       return n;
     },
     toast(msg, timeout=1500){
