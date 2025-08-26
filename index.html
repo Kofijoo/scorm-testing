@@ -11,7 +11,7 @@
 
   <header class="topbar" role="banner">
     <div class="brand">
-      <span aria-hidden="true"></span>
+      <span aria-hidden="true">🤖🌿</span>
       <strong>Eco Explorers</strong>
     </div>
 
@@ -49,6 +49,14 @@
     // window.XAPI_ENDPOINT = "https://your-lrs.example/xapi/";
     // window.XAPI_AUTH = "Basic base64(username:password)";
     // window.XAPI_ACTOR = { mbox: "mailto:player@example.com", name: "Player" };
+
+    // Preload the 9 UI images to avoid flashes when Level 1 renders
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.preloadImages) {
+        const pics = Array.from({length: 9}, (_, i) => `assets/images/pic${i+1}.png`);
+        preloadImages(pics);
+      }
+    });
   </script>
 
   <!-- Core utilities and UI -->

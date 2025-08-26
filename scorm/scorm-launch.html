@@ -4,20 +4,45 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Eco Explorers — SCORM Launch</title>
+  <!-- For SCORM packaging we keep a copy of styles under scorm/css/styles.css -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <script>window.APP_VERSION="0.1.0";</script>
-  <header class="topbar"><div class="brand"><strong>Eco Explorers (SCORM)</strong></div></header>
-  <main id="stage"></main>
-  <footer class="bottombar"></footer>
+  <header class="topbar" role="banner">
+    <div class="brand">
+      <span aria-hidden="true">🤖🌿</span>
+      <strong>Eco Explorers (SCORM)</strong>
+    </div>
+  </header>
 
-  <!-- same scripts, but relative to /scorm -->
+  <main id="stage" role="main" tabindex="-1" aria-live="polite"></main>
+  <footer class="bottombar" role="contentinfo"></footer>
+
+  <script>
+    window.APP_VERSION = "0.1.0";
+
+    // Optional: xAPI configuration if your LMS provides an LRS
+    // window.XAPI_ENDPOINT = "https://your-lrs.example/xapi/";
+    // window.XAPI_AUTH = "Basic base64(username:password)";
+    // window.XAPI_ACTOR = { mbox: "mailto:player@example.com", name: "Player" };
+
+    // Preload the 9 UI images used on Level 1 (expects copies in scorm/assets/images/)
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.preloadImages) {
+        const pics = Array.from({length: 9}, (_, i) => `assets/images/pic${i+1}.png`);
+        preloadImages(pics);
+      }
+    });
+  </script>
+
+  <!-- Scripts mirrored inside /scorm for LMS use -->
   <script src="js/util.js"></script>
   <script src="js/ui.js"></script>
+
   <script src="js/tracking/scorm.js"></script>
   <script src="js/tracking/xapi.js"></script>
   <script src="js/tracking/tracking.js"></script>
+
   <script src="js/levels/level1.js"></script>
   <script src="js/app.js"></script>
 </body>

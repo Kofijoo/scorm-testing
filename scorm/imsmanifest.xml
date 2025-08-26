@@ -17,15 +17,35 @@
   </organizations>
   <resources>
     <resource identifier="RES1" type="webcontent" adlcp:scormtype="sco" href="scorm-launch.html">
+      <!-- Entry point -->
       <file href="scorm-launch.html"/>
+
+      <!-- CSS -->
       <file href="css/styles.css"/>
-      <file href="js/app.js"/>
-      <file href="js/ui.js"/>
+
+      <!-- Core JS -->
       <file href="js/util.js"/>
+      <file href="js/ui.js"/>
+      <file href="js/app.js"/>
+
+      <!-- Level JS -->
       <file href="js/levels/level1.js"/>
-      <file href="js/tracking/tracking.js"/>
+
+      <!-- Tracking JS -->
       <file href="js/tracking/scorm.js"/>
+      <file href="js/tracking/tracking.js"/>
       <file href="js/tracking/xapi.js"/>
+
+      <!-- Assets (images used on Level 1) -->
+      <file href="assets/images/pic1.png"/>
+      <file href="assets/images/pic2.png"/>
+      <file href="assets/images/pic3.png"/>
+      <file href="assets/images/pic4.png"/>
+      <file href="assets/images/pic5.png"/>
+      <file href="assets/images/pic6.png"/>
+      <file href="assets/images/pic7.png"/>
+      <file href="assets/images/pic8.png"/>
+      <file href="assets/images/pic9.png"/>
     </resource>
   </resources>
 </manifest>
