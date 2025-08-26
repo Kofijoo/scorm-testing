@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Eco Explorers — Kids Game (6 Levels)</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <noscript>This game needs JavaScript enabled.</noscript>
+
+  <header class="topbar" role="banner">
+    <div class="brand">
+      <span aria-hidden="true"></span>
+      <strong>Eco Explorers</strong>
+    </div>
+
+    <nav aria-label="Progress">
+      <ol id="progress" class="progress" data-total="6" data-current="1">
+        <!-- dots inserted by JS -->
+      </ol>
+    </nav>
+
+    <div class="controls">
+      <button id="btn-mute" aria-pressed="false" aria-label="Toggle sound">🔈</button>
+      <button id="btn-reset" aria-label="Reset progress">↺</button>
+      <a class="sr-only-focusable" href="#stage">Skip to game</a>
+    </div>
+  </header>
+
+  <main id="stage" role="main" tabindex="-1" aria-live="polite">
+    <!-- level content will render here -->
+  </main>
+
+  <footer class="bottombar" role="contentinfo">
+    <button id="btn-back" class="nav-btn" disabled>Back</button>
+    <div class="spacer"></div>
+    <button id="btn-hint" class="nav-btn" aria-describedby="hint-desc">Hint</button>
+    <span id="hint-desc" class="sr-only">Use a limited hint if you get stuck.</span>
+    <div class="spacer"></div>
+    <button id="btn-next" class="nav-btn">Next</button>
+  </footer>
+
+  <script>
+    // App version marker
+    window.APP_VERSION = "0.1.0";
+
+    // Optional: xAPI configuration (leave commented if you don't have an LRS yet)
+    // window.XAPI_ENDPOINT = "https://your-lrs.example/xapi/";
+    // window.XAPI_AUTH = "Basic base64(username:password)";
+    // window.XAPI_ACTOR = { mbox: "mailto:player@example.com", name: "Player" };
+  </script>
+
+  <!-- Core utilities and UI -->
+  <script src="js/util.js"></script>
+  <script src="js/ui.js"></script>
+
+  <!-- Tracking (SCORM + xAPI wrappers and unified tracking) -->
+  <script src="js/tracking/scorm.js"></script>
+  <script src="js/tracking/xapi.js"></script>
+  <script src="js/tracking/tracking.js"></script>
+
+  <!-- Levels and app bootstrap -->
+  <script src="js/levels/level1.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
