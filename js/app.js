@@ -1,12 +1,16 @@
 (function(){
   const TOTAL_LEVELS = 6;
+  const levelMeta = {
+    1: { title: 'Sort the Leaves' },
+    2: { title: 'Bug Count' },
+    3: { title: 'Recycle Sorter' }
+  };
 
   const App = {
     currentLevel: 1,
     tracking: null,
 
     init(){
-      // Progress UI is optional on SCORM shell; guarded in UI.Progress
       UI.Progress.init(TOTAL_LEVELS);
       this.bindUI();
       this.tracking = window.AppTracking;
@@ -16,21 +20,15 @@
     },
 
     bindUI(){
-      const reset = document.getElementById('btn-reset');
-      const mute  = document.getElementById('btn-mute');
-      const back  = document.getElementById('btn-back');
-      const next  = document.getElementById('btn-next');
-      const hint  = document.getElementById('btn-hint');
-
-      reset && reset.addEventListener('click', ()=> this.tracking.reset());
-      mute  && mute.addEventListener('click', (e)=>{
+      on($('#btn-reset'), 'click', ()=> this.tracking.reset());
+      on($('#btn-mute'), 'click', (e)=>{
         const pressed = e.currentTarget.getAttribute('aria-pressed') === 'true';
         e.currentTarget.setAttribute('aria-pressed', String(!pressed));
       });
 
-      back && back.addEventListener('click', ()=> this.nav.back());
-      next && next.addEventListener('click', ()=> this.nav.next());
-      hint && hint.addEventListener('click', ()=> alert('Try matching by color!'));
+      on($('#btn-back'), 'click', ()=> this.nav.back());
+      on($('#btn-next'), 'click', ()=> this.nav.next());
+      on($('#btn-hint'), 'click', ()=> alert('Try matching by color!'));
     },
 
     routeFromHash(){
@@ -42,24 +40,58 @@
     gotoLevel(n){
       this.currentLevel = n;
       UI.Progress.update(n);
+      $('#btn-back').disabled = n<=1;
+      $('#btn-next').disabled = n>=TOTAL_LEVELS;
+      this.showIntro(n);
+    },
 
-      const back = document.getElementById('btn-back');
-      const next = document.getElementById('btn-next');
-      if (back) back.disabled = n<=1;
-      if (next) next.disabled = n>=TOTAL_LEVELS;
+    showIntro(n){
+      const wrap = UI.el('div', {className:'stage-wrap'});
+      const card = UI.el('section', {className:'hero-card'});
 
-      // Start tracking for the level
+      const photo = UI.el('div', {className:'hero-photo'});
+      const img = UI.el('img', {
+        src: this.characterFor(n),
+        alt: `Explorer character for Level ${n}`,
+        loading: 'eager',
+        decoding: 'async'
+      });
+      photo.append(img);
+
+      const title = UI.el('h1', {className:'hero-title', textContent: `Level ${n}: ${this.titleFor(n)}`});
+      const speech = UI.el('div', {className:'speech', textContent:'Good luck!'});
+
+      const actions = UI.el('div', {className:'hero-actions'});
+      const startBtn = UI.el('button', {className:'nav-btn primary', textContent:'Start Level'});
+      actions.append(startBtn);
+
+      card.append(photo, title, speech, actions);
+      wrap.append(card);
+      UI.render(document.getElementById('stage'), wrap);
+
+      startBtn.addEventListener('click', ()=> this.launchLevel(n));
+    },
+
+    titleFor(n){ return (levelMeta[n] && levelMeta[n].title) || `Level ${n}`; },
+    characterFor(n){
+      const idx = ((n - 1) % 9) + 1; // cycle through pic1..pic9
+      return `assets/images/pic${idx}.png`;
+    },
+
+    launchLevel(n){
+      // Tracking when gameplay actually starts
       this.tracking.startLevel(n);
 
       let view = null;
       if(n===1) view = window.Level1();
+      else if(n===2) view = window.Level2();
+      else if(n===3) view = window.Level3();
       else view = this.placeholder(n);
 
       UI.render(document.getElementById('stage'), view);
     },
 
     placeholder(n){
-      // Keep placeholders centered like Level 1
       const wrap = UI.el('div', {className:'stage-wrap'});
       const card = UI.el('section', {className:'game-card'});
       card.append(
@@ -77,6 +109,5 @@
   };
 
   window.App = App;
-
   window.addEventListener('DOMContentLoaded', ()=> App.init());
 })();

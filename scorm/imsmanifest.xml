@@ -28,15 +28,17 @@
       <file href="js/ui.js"/>
       <file href="js/app.js"/>
 
-      <!-- Level JS -->
+      <!-- Levels -->
       <file href="js/levels/level1.js"/>
+      <file href="js/levels/level2.js"/>
+      <file href="js/levels/level3.js"/>
 
-      <!-- Tracking JS -->
+      <!-- Tracking -->
       <file href="js/tracking/scorm.js"/>
       <file href="js/tracking/tracking.js"/>
       <file href="js/tracking/xapi.js"/>
 
-      <!-- Assets (images used on Level 1) -->
+      <!-- Assets (images used for intro characters) -->
       <file href="assets/images/pic1.png"/>
       <file href="assets/images/pic2.png"/>
       <file href="assets/images/pic3.png"/>

@@ -1,16 +1,16 @@
 (function(){
-  // --- small helpers to build UI for Level 1 ---
+  // --- helpers ---
   function makeLeaf(color, id){
-    const span = document.createElement('div');
-    span.className = 'leaf';
-    span.setAttribute('draggable', 'true');
-    span.dataset.color = color;
-    span.dataset.id = id;
-    span.tabIndex = 0;
-    span.setAttribute('role','button');
-    span.setAttribute('aria-label', color + ' leaf');
-    span.textContent = '🍃';
-    return span;
+    const el = document.createElement('div');
+    el.className = 'leaf';
+    el.setAttribute('draggable', 'true');
+    el.dataset.color = color;
+    el.dataset.id = id;
+    el.tabIndex = 0;
+    el.setAttribute('role','button');
+    el.setAttribute('aria-label', color + ' leaf');
+    el.textContent = '🍃';
+    return el;
   }
 
   function pointerDraggable(el){
@@ -23,11 +23,13 @@
       offsetY = (e.clientY || e.touches?.[0]?.clientY) - rect.top;
 
       ghost = el.cloneNode(true);
-      ghost.style.position = 'fixed';
-      ghost.style.pointerEvents = 'none';
-      ghost.style.opacity = '0.85';
-      ghost.style.zIndex = '999';
-      ghost.style.transform = 'scale(1.05)';
+      Object.assign(ghost.style, {
+        position:'fixed',
+        pointerEvents:'none',
+        opacity:'0.85',
+        zIndex:'999',
+        transform:'scale(1.05)'
+      });
       document.body.appendChild(ghost);
       move(e);
       document.addEventListener('pointermove', move);
@@ -69,29 +71,14 @@
     el.addEventListener('touchstart', (e)=>{ e.preventDefault(); onStart(e); }, {passive:false});
   }
 
-  function avatarStrip(){
-    const wrap = UI.el('div', {className:'avatar-strip', role:'group', ariaLabel:'Explorers'});
-    const sources = Array.from({length:9}, (_,i)=>`assets/images/pic${i+1}.png`);
-    sources.forEach((src, i)=>{
-      const holder = UI.el('div', {className:'avatar'});
-      const img = UI.el('img', {src, alt:`Explorer avatar ${i+1}`, loading:'lazy', decoding:'async'});
-      holder.append(img);
-      wrap.append(holder);
-    });
-    return wrap;
-  }
-
   // --- Level view ---
   function Level1(){
-    // Centering wrapper controls the overall width
     const root = UI.el('div', {className:'stage-wrap'});
 
-    // Header card
     const header = UI.el('section', {className:'game-card'});
     header.append(
       UI.el('h1', {textContent:'Level 1: Sort the Leaves'}),
-      UI.el('p', {textContent:'Drag the leaves into the matching baskets. Use keyboard: focus a leaf and press 1, 2, or 3.'}),
-      avatarStrip()
+      UI.el('p', {textContent:'Drag the leaves into the matching baskets. Tip: focus a leaf and press 1, 2, or 3 to drop it by keyboard.'})
     );
 
     const buckets = ['red','yellow','green'].map(c=>{
@@ -101,7 +88,6 @@
     });
 
     const leafRow = UI.el('div', {className:'row'});
-    // 6 leaves total (2 per color)
     const colors = ['red','yellow','green','green','red','yellow'];
     const leaves = colors.map((c,i)=> makeLeaf(c, i+1));
 
@@ -115,7 +101,6 @@
         const done = header.querySelectorAll('.leaf').length === 0;
         if(done) finish();
       });
-      // keyboard shortcut: 1/2/3 = buckets
       l.addEventListener('keydown', (e)=>{
         if(['1','2','3'].includes(e.key)){
           const idx = Number(e.key)-1;
@@ -147,13 +132,13 @@
       const stats = App.tracking.levelStats(1);
       const score = Math.round((stats.correct / Math.max(1, stats.attempts)) * 100);
       App.tracking.completeLevel(1, {passed: score >= 60, score});
+
       const doneView = UI.el('div', {className:'game-card'});
       doneView.append(
         UI.el('h2', {textContent:'Nice work!'}),
         UI.el('p', {textContent:`Level 1 complete. Score: ${score}.`})
       );
       UI.render(document.getElementById('stage'), UI.el('div',{className:'stage-wrap'}, doneView));
-      // Small pause then move to Level 2
       setTimeout(()=>App.nav.next(), 600);
     }
 
