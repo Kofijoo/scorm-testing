@@ -198,3 +198,9 @@ p{ margin: 0 0 12px; color:var(--muted); }
 /* ===== Level 4 (Eco Quiz) — optional polish ===== */
 .game-card h2 { font-size: clamp(18px, 2.2vw, 22px); }
 .row .nav-btn { min-width: 120px; justify-content: center; }
+
+/* ===== Level 5 (Greener Choice) — optional polish ===== */
+.row .nav-btn { min-width: 160px; justify-content: center; }
+@media (min-width: 720px){
+  .row .nav-btn { min-width: 200px; }
+}
