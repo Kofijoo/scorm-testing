@@ -5,7 +5,8 @@
     2: { title: 'Bug Count' },
     3: { title: 'Recycle Sorter' },
     4: { title: 'Eco Quiz (True/False)' },
-    5: { title: 'Greener Choice (A/B)' }
+    5: { title: 'Greener Choice (A/B)' },
+    6: { title: 'Final Challenge' }
   };
 
   const App = {
@@ -89,6 +90,7 @@
       else if(n===3) view = window.Level3();
       else if(n===4) view = window.Level4();
       else if(n===5) view = window.Level5();
+      else if(n===6) view = window.Level6();
       else view = this.placeholder(n);
 
       UI.render(document.getElementById('stage'), view);

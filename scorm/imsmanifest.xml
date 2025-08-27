@@ -34,6 +34,7 @@
       <file href="js/levels/level3.js"/>
       <file href="js/levels/level4.js"/>
       <file href="js/levels/level5.js"/>
+      <file href="js/levels/level6.js"/>
 
       <!-- Tracking -->
       <file href="js/tracking/scorm.js"/>
