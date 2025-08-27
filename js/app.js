@@ -3,7 +3,8 @@
   const levelMeta = {
     1: { title: 'Sort the Leaves' },
     2: { title: 'Bug Count' },
-    3: { title: 'Recycle Sorter' }
+    3: { title: 'Recycle Sorter' },
+    4: { title: 'Eco Quiz (True/False)' }
   };
 
   const App = {
@@ -79,13 +80,13 @@
     },
 
     launchLevel(n){
-      // Tracking when gameplay actually starts
       this.tracking.startLevel(n);
 
       let view = null;
       if(n===1) view = window.Level1();
       else if(n===2) view = window.Level2();
       else if(n===3) view = window.Level3();
+      else if(n===4) view = window.Level4();
       else view = this.placeholder(n);
 
       UI.render(document.getElementById('stage'), view);

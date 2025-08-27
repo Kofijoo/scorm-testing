@@ -32,13 +32,14 @@
       <file href="js/levels/level1.js"/>
       <file href="js/levels/level2.js"/>
       <file href="js/levels/level3.js"/>
+      <file href="js/levels/level4.js"/>
 
       <!-- Tracking -->
       <file href="js/tracking/scorm.js"/>
       <file href="js/tracking/tracking.js"/>
       <file href="js/tracking/xapi.js"/>
 
-      <!-- Assets (images used for intro characters) -->
+      <!-- Assets (intro character images) -->
       <file href="assets/images/pic1.png"/>
       <file href="assets/images/pic2.png"/>
       <file href="assets/images/pic3.png"/>

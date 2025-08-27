@@ -170,3 +170,7 @@ p{ margin: 0 0 12px; color:var(--muted); }
   user-select: none;
 }
 .item:active{ cursor: grabbing; }
+
+/* ===== Level 4 (Eco Quiz) — optional polish ===== */
+.game-card h2 { font-size: clamp(18px, 2.2vw, 22px); }
+.row .nav-btn { min-width: 120px; justify-content: center; }
