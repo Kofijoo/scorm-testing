@@ -1,20 +1,49 @@
 (function(){
-  // Round data — keep it simple and kid-friendly.
-  // correct: 'a' or 'b'
-  const ROUNDS = [
+  // Canonical rounds where `correct` is greener when shown as (a,b).
+  const BASE_ROUNDS = [
     { id:'r1', a:'Ride a Bike 🚲',     b:'Drive a Car 🚗',         correct:'a' },
     { id:'r2', a:'Reuse a Bottle 🧴',  b:'Use One-Time Cup 🥤',    correct:'a' },
     { id:'r3', a:'Short Shower 🚿',    b:'Full Bathtub 🛁',        correct:'a' },
     { id:'r4', a:'Turn Lights Off 💡', b:'Leave Lights On 💡',     correct:'a' },
     { id:'r5', a:'Walk to School 🚶',  b:'Go by Taxi 🚕',          correct:'a' },
     { id:'r6', a:'Recycle Cans ♻️',    b:'Trash the Cans 🗑️',     correct:'a' },
-    // You can add more later:
+    // more ideas later:
     // { id:'r7', a:'Plant a Tree 🌳', b:'Cut a Tree 🪓', correct:'a' },
   ];
 
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Randomize display order so correct can be A or B; ensure not all the same.
+  function prepareRounds(base, total){
+    const picked = shuffle(base).slice(0, total).map(r => ({...r}));
+    const rounds = picked.map(r => {
+      const flip = Math.random() < 0.5; // 50/50 put greener on A or B
+      return flip
+        ? { id:r.id, a:r.b, b:r.a, correct:(r.correct === 'a' ? 'b' : 'a') }
+        : { id:r.id, a:r.a, b:r.b, correct:r.correct };
+    });
+
+    // Guarantee at least one 'a' and one 'b' correct.
+    const countA = rounds.filter(r=>r.correct==='a').length;
+    if(countA === 0 || countA === rounds.length){
+      const k = Math.floor(Math.random()*rounds.length);
+      const r = rounds[k];
+      [r.a, r.b] = [r.b, r.a];
+      r.correct = (r.correct === 'a') ? 'b' : 'a';
+    }
+    return rounds;
+  }
+
   function Level5(){
-    const TOTAL = 6; // number of rounds per play
-    const rounds = ROUNDS.slice(0, TOTAL);
+    const TOTAL = 6;
+    const rounds = prepareRounds(BASE_ROUNDS, TOTAL);
 
     const root    = UI.el('div', {className:'stage-wrap'});
     const header  = UI.el('section', {className:'game-card'});
