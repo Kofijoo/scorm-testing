@@ -1,6 +1,5 @@
 (function(){
   // --- Question bank (simple, kid-friendly) ---
-  // ans: true for "True", false for "False"
   const QUESTIONS = [
     { id:'q1',  text:'Turning off the lights saves energy.', ans:true },
     { id:'q2',  text:'Throwing plastic in the ocean helps fish.', ans:false },
@@ -41,8 +40,9 @@
     const card    = UI.el('section', {className:'game-card'});
     const prompt  = UI.el('h2', {textContent:''});
     const buttons = UI.el('div', {className:'row'});
-    const btnTrue = UI.el('button', {className:'nav-btn primary', textContent:'True',  ariaLabel:'Choose True'});
-    const btnFalse= UI.el('button', {className:'nav-btn',          textContent:'False', ariaLabel:'Choose False'});
+    // UNBIASED: both neutral buttons
+    const btnTrue = UI.el('button', {className:'nav-btn', textContent:'True',  ariaLabel:'Choose True'});
+    const btnFalse= UI.el('button', {className:'nav-btn', textContent:'False', ariaLabel:'Choose False'});
     buttons.append(btnTrue, btnFalse);
     card.append(prompt, UI.el('div',{style:'height:8px'}), buttons);
 
