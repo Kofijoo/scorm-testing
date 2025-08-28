@@ -1,114 +1,136 @@
+````markdown
 # Eco Explorers — SCORM/xAPI HTML5 Game
-Eco Explorers is a kids’ learning game (6 short levels) built with vanilla HTML/CSS/JS.
-It runs on the open web (GitHub Pages) and inside an LMS via SCORM 1.2; it can optionally send xAPI statements to an LRS.
 
-# Table of contents
+[![Pages deploy](https://img.shields.io/github/actions/workflow/status/Kofijoo/scorm-testing/pages.yml?branch=main&label=pages)](https://github.com/Kofijoo/scorm-testing/actions)
+[![Live demo](https://img.shields.io/website?url=https%3A%2F%2Fkofijoo.github.io%2Fscorm-testing%2F&label=demo)](https://kofijoo.github.io/scorm-testing/)
+![Stack](https://img.shields.io/badge/HTML%20%7C%20CSS%20%7C%20Vanilla%20JS-0ea5e9)
+![SCORM 1.2](https://img.shields.io/badge/SCORM-1.2-7c3aed)
+![xAPI](https://img.shields.io/badge/xAPI-optional-22c55e)
+[![License](https://img.shields.io/github/license/Kofijoo/scorm-testing)](LICENSE)
+![Last commit](https://img.shields.io/github/last-commit/Kofijoo/scorm-testing)
 
-Live Demo
+**Direct:** vanilla HTML/CSS/JS game with **6 short levels**.  
+**Portable:** runs on the open web (GitHub Pages) and inside an LMS via **SCORM 1.2**.  
+**Optional analytics:** emits **xAPI** statements when an LRS is configured.
 
-What’s inside
+---
 
-Project structure
+## 🔗 Live
+- Web: **https://kofijoo.github.io/scorm-testing/**
+- LMS entry: **`scorm/scorm-launch.html`** (packaged by `imsmanifest.xml`)
 
-Roadmap
+---
 
-Useful commands
+## 📦 What you get
+- 🎮 **6 levels** with a clean “Good luck!” intro per level  
+  | L1 🍃 Sort | L2 🐞 Count | L3 ♻️ Sorter | L4 ✅ T/F | L5 🔀 A/B | L6 🏁 Final |
+  |---|---|---|---|---|---|
+- 🧩 **SCORM 1.2** wrapper (safe no-ops outside an LMS)
+- 📡 **xAPI** sender (no-ops until configured)
+- 📊 Unified tracking (attempts, per-level scores, pass/fail, course average)
+- ♿ Accessibility (keyboard paths, focus styles, ARIA; ≥44px targets)
+- 🚀 Static hosting (no build tools). GitHub Actions deploys to Pages.
 
-Contributing
+---
 
-License
+## 🧪 Run locally
+Open `index.html` in a modern browser.  
+Optional static server:
+```bash
+npx http-server .
+# http://127.0.0.1:8080
+````
 
-Why SCORM and xAPI?
+---
 
-# Live Demo
+## 🛠️ xAPI (optional)
 
-Web: https://kofijoo.github.io/scorm-testing/
+Add **before** tracking scripts (snippet already scaffolded in `index.html`):
 
-LMS entry file: scorm/scorm-launch.html (packaged by imsmanifest.xml)
+```html
+<script>
+  window.XAPI_ENDPOINT = "https://your-lrs.example/xapi/";
+  window.XAPI_AUTH    = "Basic base64(username:password)";
+  window.XAPI_ACTOR   = { mbox: "mailto:you@example.com", name: "Your Name" };
+</script>
+```
 
-# What’s inside
+Emits: `initialized`, `interacted`, `answered`, `completed` (level + course).
 
-6 levels with a friendly “Good luck!” intro card and character avatar on each level.
+---
 
-L1 — Sort the Leaves (drag & keyboard)
+## 🚀 Deploy to GitHub Pages
 
-L2 — Bug Count (number selection)
+Already configured via `.github/workflows/pages.yml`:
 
-L3 — Recycle Sorter (drag items to bins)
+1. Push to `main`.
+2. Check **Actions → Deploy static site to Pages**.
+3. Visit the demo link above.
 
-L4 — Eco Quiz (True/False)
+*No Actions?* Add a `.nojekyll` at repo root and publish from branch root.
 
-L5 — Greener Choice (A/B)
+---
 
-L6 — Final Challenge (summary/finish)
+## 🎓 Package for LMS (SCORM 1.2)
 
-SCORM 1.2 wrapper that no-ops outside an LMS.
+Zip the **contents of `/scorm`**:
 
-xAPI lightweight sender (no-ops until configured).
-
-Unified tracking of attempts, scores, pass/fail per level + course score.
-
-Accessibility: focus rings, keyboard alternatives, ARIA labels, ≥44px targets.
-
-Zero build tools: open index.html directly or deploy as static files.
-
-GitHub Actions workflow that deploys to GitHub Pages.
-
-# Project structure
-.
-├─ index.html                 # Web entry
-├─ css/
-│  └─ styles.css
-├─ js/
-│  ├─ app.js                  # Router + intro scenes + level launcher
-│  ├─ ui.js                   # UI helpers + progress dots
-│  ├─ util.js                 # tiny DOM/misc helpers
-│  ├─ levels/
-│  │  ├─ level1.js … level6.js
-│  └─ tracking/
-│     ├─ scorm.js             # SCORM 1.2 safe wrapper
-│     ├─ xapi.js              # xAPI sender (no-op until configured)
-│     └─ tracking.js          # single state + stats
-├─ assets/
-│  └─ images/                 # character avatars (png + optional webp)
-└─ scorm/
-   ├─ scorm-launch.html       # LMS entry page
-   ├─ imsmanifest.xml         # SCORM 1.2 manifest
-   ├─ css/, js/, assets/      # mirrored runtime files for the LMS package
-
-
-# Roadmap
-
-Polish game feel (sounds, micro-animations).
-
-Deeper accessibility checks (screen-reader flows).
-
-Per-level badges & end-of-course certificate.
-
-CI step to auto-build SCORM zip on release.
-
-# Useful commands
-// reset tracking state (wipes localStorage and reloads)
-// button exists in the UI as well
-localStorage.removeItem('eco-explorers-v1'); location.reload();
-
-# package SCORM 1.2
+```powershell
 $dest = "eco-explorers-scorm12.zip"
 if (Test-Path $dest) { Remove-Item $dest }
 Compress-Archive -Path scorm\* -DestinationPath $dest
+```
 
-# Contributing
+Entry point inside LMS: **`scorm-launch.html`**.
+Outside an LMS the SCORM API isn’t available; calls no-op.
 
-Issues and PRs are welcome. Keep the stack vanilla (no frameworks) and preserve LMS compatibility.
+---
 
-# License
+## 🗂️ Structure
 
-MIT — see LICENSE. You are responsible for any third-party assets you add.
+```
+.
+├─ index.html
+├─ css/            styles.css
+├─ js/
+│  ├─ app.js       router + intro + launcher
+│  ├─ ui.js        UI helpers + progress
+│  ├─ util.js      small DOM/misc utils
+│  ├─ levels/      level1.js … level6.js
+│  └─ tracking/    scorm.js · xapi.js · tracking.js
+├─ assets/images/  avatars (png + optional webp)
+└─ scorm/          LMS entry + mirrored runtime + imsmanifest.xml
+```
 
-# Why SCORM and xAPI?
+---
 
-SCORM 1.2: runs in legacy LMSs (status, score, completion).
+## ⚙️ Useful
 
-xAPI: modern analytics; this repo emits common verbs if configured.
+Reset local progress:
 
-Both layers no-op in plain web mode to keep the project simple.
+```js
+localStorage.removeItem('eco-explorers-v1'); location.reload();
+```
+
+(Optional) convert avatars to WebP (smaller), then mirror to `/scorm`:
+
+```powershell
+# requires ImageMagick
+Get-ChildItem assets\images\pic*.png | ForEach-Object {
+  magick $_.FullName -quality 82 "assets/images/$($_.BaseName).webp"
+}
+Copy-Item assets\images\pic*.webp scorm\assets\images\ -Force
+```
+
+---
+
+## 🤝 Contributing
+
+Issues and PRs welcome. Keep the stack **vanilla** and preserve **LMS compatibility**.
+
+## 📄 License
+
+MIT (you are responsible for any third-party assets you add).
+
+```
+```
