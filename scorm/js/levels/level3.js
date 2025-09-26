@@ -4,10 +4,13 @@
     let dragging = false, offsetX=0, offsetY=0, ghost=null;
 
     function onStart(e){
+      e.preventDefault();
       dragging = true;
       const rect = el.getBoundingClientRect();
-      offsetX = (e.clientX || e.touches?.[0]?.clientX) - rect.left;
-      offsetY = (e.clientY || e.touches?.[0]?.clientY) - rect.top;
+      const clientX = e.clientX || e.touches?.[0]?.clientX;
+      const clientY = e.clientY || e.touches?.[0]?.clientY;
+      offsetX = clientX - rect.left;
+      offsetY = clientY - rect.top;
 
       ghost = el.cloneNode(true);
       Object.assign(ghost.style, {
@@ -15,28 +18,34 @@
         pointerEvents:'none',
         opacity:'0.85',
         zIndex:'999',
-        transform:'scale(1.05)'
+        transform:'scale(1.05)',
+        touchAction:'none'
       });
       document.body.appendChild(ghost);
       move(e);
-      document.addEventListener('pointermove', move);
-      document.addEventListener('pointerup', end);
-      document.addEventListener('touchmove', move, {passive:false});
-      document.addEventListener('touchend', end);
+      
+      if(e.type === 'touchstart'){
+        document.addEventListener('touchmove', move, {passive:false});
+        document.addEventListener('touchend', end, {passive:false});
+      } else {
+        document.addEventListener('pointermove', move);
+        document.addEventListener('pointerup', end);
+      }
     }
 
     function move(e){
       if(!dragging || !ghost) return;
+      e.preventDefault();
       const cx = e.clientX || e.touches?.[0]?.clientX;
       const cy = e.clientY || e.touches?.[0]?.clientY;
       if(cx==null || cy==null) return;
       ghost.style.left = (cx - offsetX) + 'px';
       ghost.style.top  = (cy - offsetY) + 'px';
-      e.preventDefault?.();
     }
 
     function end(e){
       if(!dragging) return;
+      e.preventDefault();
       dragging = false;
       ghost?.remove(); ghost = null;
 
@@ -54,8 +63,11 @@
       document.removeEventListener('touchend', end);
     }
 
-    el.addEventListener('pointerdown', onStart);
-    el.addEventListener('touchstart', (e)=>{ e.preventDefault(); onStart(e); }, {passive:false});
+    if('ontouchstart' in window){
+      el.addEventListener('touchstart', onStart, {passive:false});
+    } else {
+      el.addEventListener('pointerdown', onStart);
+    }
   }
 
   // --- level data ---

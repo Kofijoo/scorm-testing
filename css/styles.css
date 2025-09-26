@@ -192,6 +192,7 @@ p{ margin: 0 0 12px; color:var(--muted); }
 .item{
   cursor: grab;
   user-select: none;
+  touch-action: none;
 }
 .item:active{ cursor: grabbing; }
 
